@@ -1,0 +1,9 @@
+logs.txt
+dist
+lib
+node_modules
+*.log
+players.json
+auction.json
+.tsbuildinfo
+node_modules
