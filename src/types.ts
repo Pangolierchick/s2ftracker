@@ -1,22 +1,22 @@
 export type S2FPlayers = {
-    totalRegistered: number,
-    playingNow: number
+    tr: number, // totalPlayers
+    pn: number  // playersNow
 }
 
 export type S2FProduct = {
-    id: number,
-    name: string,
-    count: number,
-    priceAvg: number,
-    priceMin: number
+    id: number,   // id of item
+    n: string,    // name of item
+    c: number,    // count of items in auction now
+    pa: number,   // average price of item
+    pm: number    // minimum price of item
 }
 
 export type S2FPlayersRecord = {
-    timestamp: number,
-    record: S2FPlayers
+    t: number,    // timestamp
+    r: S2FPlayers // record
 }
 
 export type S2FProductRecord = {
-    timestamp: number,
-    record: S2FProduct[]
+    t: number,      // timestamp
+    r: S2FProduct[] //record
 }

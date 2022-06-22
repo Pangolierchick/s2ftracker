@@ -8,7 +8,7 @@ import { logger } from './logger';
 async function getHTMLpage(url: string): Promise<string> {
     const response = await fetch(url);
     if (!response.ok) {
-        logger.error(`Can't request ${url} page. Status: ${response.status}`);
+        logger.error(`❌ Can't request ${url} page. Status: ${response.status}`);
         throw Error(`Can't request ${url} page. Status: ${response.statusText}`);
     }
 
@@ -31,8 +31,8 @@ function getPlayersFromHTML(html: string): S2FPlayers {
     }
 
     return {
-        totalRegistered: playersNum[0],
-        playingNow: playersNum[1]
+        tr: playersNum[0],
+        pn: playersNum[1]
     } as S2FPlayers;
 }
 

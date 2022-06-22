@@ -1,11 +1,10 @@
-import { fetchS2FAuction, fetchS2FAuctionTimestamped, filterAuctionJson } from './auction';
+import { fetchS2FAuctionTimestamped } from './auction';
 import {
     fetchPlayersFromUrlTimestamped
 } from './players'
 
 import { writeFile } from 'fs/promises';
-import { addTimestamp, saveReadJson, saveReadJsonPlayers, saveReadJsonProduct } from './utils';
-import { S2FPlayersRecord, S2FProductRecord } from './types';
+import { safeReadJsonPlayers, safeReadJsonProduct } from './utils';
 
 import { logger } from './logger';
 import { S2F_MAIN_PAGE, AUCTION_URL } from './consts';
@@ -14,40 +13,42 @@ async function fetchS2FData() {
     try {
         await fetchAndSavePlayers();
         await fetchAndSaveProducts();
-    } catch {
-        
+    } catch (e: any) {
+        logger.prettyError(e);
     }
 }
-
+ 
 async function fetchAndSavePlayers() {
-    logger.info('Fetching players');
     const players = [await fetchPlayersFromUrlTimestamped(S2F_MAIN_PAGE)];
-    const playersJson = await saveReadJsonPlayers('players.json');
+    const playersJson = await safeReadJsonPlayers('players.json');
     const mergedPlayers = playersJson.concat(players);
     await writeFile('players.json', JSON.stringify(mergedPlayers));
+   
+    logger.info('✅ Fetching players done.');
 }
 
 async function fetchAndSaveProducts() {
-    logger.info('Fetching products');
     const products = await fetchS2FAuctionTimestamped(AUCTION_URL, 'filter.json');
-    const auctionJson = await saveReadJsonProduct('auction.json');
-    
-    if (products.record.length > 0) {
+    const auctionJson = await safeReadJsonProduct('auction.json');
+
+    if (products.r.length > 0) {
         const mergedAuction = auctionJson.concat(products);
         await writeFile('auction.json', JSON.stringify(mergedAuction));
     }
+
+    logger.info('✅ Fetching products done.');
 }
 
 async function main() {
     console.log("=========== CHECKER STARTED ===========");
 
-    const THREE_HOURS = 1000 * 60 * 3;
-    const EIGHT_HOURS = 1000 * 60 * 8;
+    const FETCH_PLAYERS_TIMEOUT = 1000 * 60 * 3; // 3 hours
+    const FETCH_AUCTION_TIMEOUT = 1000 * 60 * 8; // 8 hours
 
     fetchS2FData();
 
-    // setInterval(fetchAndSavePlayers, THREE_HOURS);
-    // setInterval(fetchAndSavePlayers, EIGHT_HOURS);
+    setInterval(fetchAndSavePlayers, FETCH_PLAYERS_TIMEOUT);
+    setInterval(fetchAndSaveProducts, FETCH_AUCTION_TIMEOUT);
 }
 
 main();

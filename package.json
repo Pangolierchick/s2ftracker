@@ -47,7 +47,8 @@
     "start": "yarn tsup && node dist/main.js",
     "lint": "eslint .",
     "fix": "eslint --fix --ext .ts .",
-    "ts": "tsc --project tsconfig.json"
+    "ts": "tsc --project tsconfig.json",
+    "cleanjson": "rm -rf auction.json players.json"
   },
   "engines": {
     "node": ">=14.0.0"

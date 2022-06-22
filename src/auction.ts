@@ -11,7 +11,7 @@ async function getAuction(url: string): Promise<string> {
     const response = await fetch(url);
 
     if (!response.ok) {
-        logger.error(`Cant fetch auction ${url} data. Status: ${response.status}`);
+        logger.error(`❌ Cant fetch auction ${url} data. Status: ${response.status}`);
         throw Error(`Cant fetch auction ${url} data. Status: ${response.status}`);
     }
 
@@ -72,7 +72,7 @@ export function filterAuctionJson(auctionJson: S2FProduct[], filterJsonPath: str
     const filter: {names: string[]} = JSON.parse(fs.readFileSync(filterJsonPath, 'utf8'));
     filter.names.map(w => w.trim());
 
-    const result = auctionJson.filter(word => filter.names.includes(word.name));
+    const result = auctionJson.filter(word => filter.names.includes(word.n));
 
     return result;
 }
