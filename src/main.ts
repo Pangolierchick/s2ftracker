@@ -34,6 +34,8 @@ async function fetchAndSaveProducts() {
     if (products.r.length > 0) {
         const mergedAuction = auctionJson.concat(products);
         await writeFile('auction.json', JSON.stringify(mergedAuction));
+    } else {
+        logger.warn('Got 0 products.');
     }
 
     logger.info('✅ Fetching products done.');

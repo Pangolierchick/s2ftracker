@@ -24,7 +24,7 @@ async function parseAuction(csv: string): Promise<S2FProduct[]> {
     const readCsv = () => new Promise((resolve, reject) => {
         const records: Array<S2FProduct> = [];
     
-        const parser = parse({ columns: ['id', 'name', 'count', 'priceAvg', 'priceMin'], delimiter: '\t', ltrim: true, rtrim: true, relax_quotes: true });
+        const parser = parse({ columns: ['id', 'n', 'c', 'pa', 'pm'], delimiter: '\t', ltrim: true, rtrim: true, relax_quotes: true });
     
         parser.on('readable', () => {
             let line;
