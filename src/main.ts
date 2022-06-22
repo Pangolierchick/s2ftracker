@@ -44,8 +44,8 @@ async function fetchAndSaveProducts() {
 async function main() {
     console.log("=========== CHECKER STARTED ===========");
 
-    const FETCH_PLAYERS_TIMEOUT = 1000 * 60 * 3; // 3 hours
-    const FETCH_AUCTION_TIMEOUT = 1000 * 60 * 8; // 8 hours
+    const FETCH_PLAYERS_TIMEOUT = 1000 * 60 * 60 * 2; // 2 hours
+    const FETCH_AUCTION_TIMEOUT = 1000 * 60 * 60 * 8; // 6 hours
 
     fetchS2FData();
 
