@@ -1,13 +1,15 @@
 import { fetchS2FAuctionTimestamped } from './auction';
 import {
     fetchPlayersFromUrlTimestamped
-} from './players'
+} from './players';
 
 import { writeFile } from 'fs/promises';
 import { safeReadJsonPlayers, safeReadJsonProduct } from './utils';
 
+import { AUCTION_URL, FETCH_AUCTION_TIMEOUT, FETCH_PLAYERS_TIMEOUT, S2F_MAIN_PAGE } from './consts';
 import { logger } from './logger';
-import { S2F_MAIN_PAGE, AUCTION_URL } from './consts';
+
+import { setIntervalAsync } from 'set-interval-async/dynamic/index.js';
 
 async function fetchS2FData() {
     try {
@@ -44,13 +46,23 @@ async function fetchAndSaveProducts() {
 async function main() {
     console.log("=========== CHECKER STARTED ===========");
 
-    const FETCH_PLAYERS_TIMEOUT = 1000 * 60 * 60 * 2; // 2 hours
-    const FETCH_AUCTION_TIMEOUT = 1000 * 60 * 60 * 8; // 6 hours
-
     fetchS2FData();
 
-    setInterval(fetchAndSavePlayers, FETCH_PLAYERS_TIMEOUT);
-    setInterval(fetchAndSaveProducts, FETCH_AUCTION_TIMEOUT);
+    setIntervalAsync(async () => {
+        try {
+            await fetchAndSavePlayers();
+        } catch (e: any) {
+            logger.error(e);
+        }
+    }, FETCH_PLAYERS_TIMEOUT);
+
+    setIntervalAsync(async () => {
+        try {
+            await fetchAndSaveProducts();
+        } catch (e: any) {
+            logger.error(e);
+        }
+    }, FETCH_AUCTION_TIMEOUT);
 }
 
 main();
