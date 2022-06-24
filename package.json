@@ -31,6 +31,7 @@
   "type": "module",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
+    "@types/adm-zip": "^0.5.0",
     "@types/csv-parse": "^1.2.2",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.6.2",
@@ -51,7 +52,8 @@
     "lint": "eslint .",
     "fix": "eslint --fix --ext .ts .",
     "ts": "tsc --project tsconfig.json",
-    "cleanjson": "rm -rf auction.json players.json",
+    "cleanjson": "rm -rf ./data/auction.json ./data/players.json",
+    "cleanbck": "rm -rf ./data/*.backup.* ./data/*.zip",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -59,6 +61,7 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "adm-zip": "^0.5.9",
     "csv-parse": "^5.2.0",
     "global": "^4.4.0",
     "mongodb": "^4.7.0",
