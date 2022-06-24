@@ -7,3 +7,4 @@ players.json
 auction.json
 .tsbuildinfo
 node_modules
+*.backup.*

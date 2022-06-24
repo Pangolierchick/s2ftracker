@@ -6,10 +6,11 @@ import {
 import { writeFile } from 'fs/promises';
 import { safeReadJsonPlayers, safeReadJsonProduct } from './utils';
 
-import { AUCTION_URL, FETCH_AUCTION_TIMEOUT, FETCH_PLAYERS_TIMEOUT, S2F_MAIN_PAGE } from './consts';
+import { AUCTION_URL, BACKUP_TIMEOUT, FETCH_AUCTION_TIMEOUT, FETCH_PLAYERS_TIMEOUT, S2F_MAIN_PAGE } from './consts';
 import { logger } from './logger';
 
 import { setIntervalAsync } from 'set-interval-async/dynamic/index.js';
+import { createBackup } from './backup';
 
 async function fetchS2FData() {
     try {
@@ -18,6 +19,12 @@ async function fetchS2FData() {
     } catch (e: any) {
         logger.prettyError(e);
     }
+
+    const res = Promise.all([fetchAndSavePlayers(), fetchAndSaveProducts()]).then(() => {
+        console.log('✅ Data fetch done.');
+    }, () => {
+        console.log('❌ Data fetch failed.');
+    })
 }
  
 async function fetchAndSavePlayers() {
@@ -25,8 +32,6 @@ async function fetchAndSavePlayers() {
     const playersJson = await safeReadJsonPlayers('players.json');
     const mergedPlayers = playersJson.concat(players);
     await writeFile('players.json', JSON.stringify(mergedPlayers));
-   
-    logger.info('✅ Fetching players done.');
 }
 
 async function fetchAndSaveProducts() {
@@ -39,8 +44,21 @@ async function fetchAndSaveProducts() {
     } else {
         logger.warn('Got 0 products.');
     }
+}
 
-    logger.info('✅ Fetching products done.');
+async function createBackupHandler() {
+    const backupFiles = [ './auction.json', 'players.json' ];
+    const promises: Promise<void>[] = [];
+    
+    for (const file of backupFiles) {
+        promises.push(createBackup(file));
+    }
+
+    Promise.all(promises).then(() => {
+        console.log('✅ Backup done.');
+    }, (r) => {
+        console.log(`❌ Backup Failed. ${r}`);    
+    });
 }
 
 async function main() {
@@ -49,20 +67,24 @@ async function main() {
     fetchS2FData();
 
     setIntervalAsync(async () => {
-        try {
-            await fetchAndSavePlayers();
-        } catch (e: any) {
-            logger.error(e);
-        }
+        fetchAndSavePlayers().then(() => {
+            logger.info('✅ Fetching players done.');
+        }, (r) => {
+            logger.error('❌ Fetching players failed.', r);
+        })
     }, FETCH_PLAYERS_TIMEOUT);
 
     setIntervalAsync(async () => {
-        try {
-            await fetchAndSaveProducts();
-        } catch (e: any) {
-            logger.error(e);
-        }
+        fetchAndSaveProducts().then(() => {
+            logger.info('✅ Fetching products done.');
+        }, (r) => {
+            logger.error('❌ Fetching products failed.', r);
+        })
     }, FETCH_AUCTION_TIMEOUT);
+
+    setIntervalAsync(async () => {
+        await createBackupHandler();
+    }, BACKUP_TIMEOUT);
 }
 
 main();
