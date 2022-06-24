@@ -1,6 +1,12 @@
 {
-  "name": "twitch",
-  "version": "0.0.1",
+  "name": "s2ftracker",
+  "author": "RKirill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pangolierchick/s2ftracker"
+  },
+  "version": "0.1.0",
+  "license": "MIT",
   "main": "./dist/main.js",
   "module": "./dist/main.mjs",
   "source": "./src/main.ts",
@@ -27,7 +33,6 @@
     "sourcemap": true,
     "clean": true
   },
-  "license": "MIT",
   "type": "module",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
