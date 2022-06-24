@@ -20,3 +20,9 @@ export type S2FProductRecord = {
     t: number,      // timestamp
     r: S2FProduct[] //record
 }
+
+export interface ILogger {
+    info(...args: unknown[]): void;
+    warn(...args: unknown[]): void;
+    error(...args: unknown[]): void;
+}

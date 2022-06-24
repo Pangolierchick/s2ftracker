@@ -8,3 +8,5 @@ auction.json
 .tsbuildinfo
 node_modules
 *.backup.*
+coverage
+.DS_Store

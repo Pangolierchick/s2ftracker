@@ -3,7 +3,7 @@ import { parse } from 'csv-parse';
 import { S2FProduct, S2FProductRecord } from './types';
 import fs from 'fs';
 import { AUCTION_URL } from './consts';
-import { addTimestamp } from './utils';
+import { addTimestamp, validateS2FProduct } from './utils';
 
 import { logger } from './logger';
 
@@ -20,25 +20,29 @@ async function getAuction(url: string): Promise<string> {
     return auctionCsv;
 }
 
-async function parseAuction(csv: string): Promise<S2FProduct[]> {
+export async function parseAuction(csv: string): Promise<S2FProduct[]> {
     const readCsv = () => new Promise((resolve, reject) => {
         const records: Array<S2FProduct> = [];
-    
+
         const parser = parse({ columns: ['id', 'n', 'c', 'pa', 'pm'], delimiter: '\t', ltrim: true, rtrim: true, relax_quotes: true });
-    
+
         parser.on('readable', () => {
             let line;
             while ((line = parser.read()) !== null) {
-                records.push(line as S2FProduct);
+                if (!validateS2FProduct(line)) {
+                    reject('Bad format of csv file');
+                }
+
+                records.push(line);
             }
-    
+
             resolve(records);
         })
-    
+
         parser.on('error', (err) => {
             reject(err);
         })
-    
+
         parser.write(csv);
         parser.end();
     })
@@ -53,7 +57,7 @@ export async function fetchS2FAuctionTimestamped(url: string, filterPath?: strin
     return addTimestamp<S2FProductRecord>(product);
 }
 
-export async function fetchS2FAuction(url: string = AUCTION_URL, filterPath?: string): Promise<S2FProduct[]> {
+export async function fetchS2FAuction(url: string, filterPath?: string): Promise<S2FProduct[]> {
     const csv = await getAuction(url);
     let products = await parseAuction(csv);
 

@@ -38,10 +38,12 @@
     "@types/tmi.js": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
+    "c8": "^7.11.3",
     "eslint": "^8.17.0",
     "esno": "^0.16.3",
     "tsup": "^6.1.2",
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.3",
+    "vitest": "^0.15.2"
   },
   "scripts": {
     "build": "yarn tsup",
@@ -49,7 +51,9 @@
     "lint": "eslint .",
     "fix": "eslint --fix --ext .ts .",
     "ts": "tsc --project tsconfig.json",
-    "cleanjson": "rm -rf auction.json players.json"
+    "cleanjson": "rm -rf auction.json players.json",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "engines": {
     "node": ">=14.0.0"

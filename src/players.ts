@@ -5,7 +5,7 @@ import { addTimestamp } from './utils';
 
 import { logger } from './logger';
 
-async function getHTMLpage(url: string): Promise<string> {
+export async function getHTMLpage(url: string): Promise<string> {
     const response = await fetch(url);
     if (!response.ok) {
         logger.error(`❌ Can't request ${url} page. Status: ${response.status}`);
@@ -15,7 +15,7 @@ async function getHTMLpage(url: string): Promise<string> {
     return await (response.text());
 }
 
-function getPlayersFromHTML(html: string): S2FPlayers {
+export function getPlayersFromHTML(html: string): S2FPlayers {
     const regexp = />(\d{1,9})</gm;
 
     let m: RegExpExecArray | null;
@@ -28,6 +28,10 @@ function getPlayersFromHTML(html: string): S2FPlayers {
         }
 
         playersNum.push(parseInt(m[1]));
+    }
+
+    if (typeof playersNum[0] === 'undefined' || typeof playersNum[1] === 'undefined') {
+        throw new Error('Could not read players from html');
     }
 
     return {
@@ -43,7 +47,7 @@ export async function fetchPlayersFromUrl(url: string): Promise<S2FPlayers> {
     return players;
 }
 
-export async function fetchPlayersFromUrlTimestamped(url: string = S2F_MAIN_PAGE): Promise<S2FPlayersRecord> {
+export async function fetchPlayersFromUrlTimestamped(url: string): Promise<S2FPlayersRecord> {
     const players = await fetchPlayersFromUrl(url);
     return addTimestamp<S2FPlayersRecord>(players);
 }
