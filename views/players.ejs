@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+  <title>S2F Tracker</title>
+</head>
+
+<body>
+    <%- include('./partials/navbar'); %>
+    <%- include('./partials/canvas'); %>
+    <div class="container">
+      <table data-toggle="table" data-pagination="true" data-id-field="name" data-page-list="[5, 10, 25, 50, 100, ALL]"
+        data-page-size="5">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Total registered</th>
+            <th scope="col">Online</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% players.forEach(function(record) { %>
+            <tr>
+              <td>
+                <%= new Date(record.t).toLocaleString('ru') %>
+              </td>
+              <td>
+                <%= record.r.tr%>
+              </td>
+              <td>
+                <%= record.r.pn %>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+  </body>
+
+</html>

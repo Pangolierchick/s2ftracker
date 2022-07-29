@@ -3,6 +3,18 @@ import { logger } from './logger';
 import { createBackup } from './backup';
 import { S2FFetcher } from './fetcher';
 import { setIntervalAsync } from 'set-interval-async/dynamic/index.js';
+import express from 'express';
+import compression from 'compression';
+
+import fs from 'fs/promises'
+import { S2FPlayersRecord } from './types';
+
+const app = express()
+const port = 3000
+
+app.use(compression())
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 async function main() {
   console.log("=========== CHECKER STARTED ===========");
@@ -18,3 +30,49 @@ async function main() {
 }
 
 main();
+
+
+app.get('/', (req, res) => {
+  res.render('index')
+});
+
+app.get('/render', (req, res) => {
+  app.render('index', {}, async (err, html) => {
+    console.log(err, html)
+    await fs.writeFile('index.html', html)
+  })
+
+  app.render('players', {players: [{t: 0, r: {tr: 0, pn: 0}}]}, async (err, html) => {
+    console.log(err, html)
+    await fs.writeFile('players.html', html)
+  })
+})
+
+app.get('/players', async (req, res) => {
+  const playersText = await fs.readFile('./data/players.json', {encoding: 'utf-8'})
+  const playersJson = JSON.parse(playersText) as S2FPlayersRecord[]
+
+  let labels: string[] = []
+  let data: number[] = []
+
+  for (let player of playersJson) {
+    labels.push(`"${new Date(player.t).toLocaleString('ru').replace(',', '')}"`)
+    data.push(player.r.pn)
+  }
+
+  res.render('players', {
+    players: playersJson,
+    plotData: {
+      labels: labels,
+      data: data
+    }
+  })
+})
+
+app.get('/auction', async (req, res) => {
+  res.render('auction')
+})
+
+app.listen(port, () => {
+  console.log(`Running on port ${port}`)
+})

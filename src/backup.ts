@@ -6,9 +6,7 @@ import AdmZip from 'adm-zip';
 export function getBackupFileName(filePath: string): string {
   const fileBasename = basename(filePath, extname(filePath));
   const backupFilename = fileBasename.concat('.backup', extname(filePath));
-  const backupPath = join(dirname(filePath), backupFilename);
-
-  return backupPath;
+  return join(dirname(filePath), backupFilename);
 }
 
 export async function createBackup(filePath: string) {

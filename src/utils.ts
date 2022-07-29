@@ -16,7 +16,7 @@ export async function safeReadJsonPlayers(path: string): Promise<S2FPlayersRecor
   return await safeReadJson<S2FPlayersRecord>(path);
 }
 
-export function addTimestamp<T>(object: any): T {
+export function addTimestamp<T>(object: unknown): T {
   return {
     t: Date.now(),
     r: object

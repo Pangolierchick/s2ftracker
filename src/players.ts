@@ -42,9 +42,7 @@ export function getPlayersFromHTML(html: string): S2FPlayers {
 
 export async function fetchPlayersFromUrl(url: string): Promise<S2FPlayers> {
   const html = await getHTMLpage(url);
-  const players = getPlayersFromHTML(html);
-
-  return players;
+  return getPlayersFromHTML(html);
 }
 
 export async function fetchPlayersFromUrlTimestamped(url: string): Promise<S2FPlayersRecord> {
