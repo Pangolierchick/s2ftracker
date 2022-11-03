@@ -8,6 +8,8 @@ import { logger } from "./logger";
 import { fetchPlayersFromUrlTimestamped } from "./players";
 import { ILogger } from "./types";
 import { safeReadJsonPlayers, safeReadJsonProduct } from "./utils";
+import { join } from 'path';
+import { __root } from './path';
 
 export class S2FFetcher {
   readonly playersFilename: string;
