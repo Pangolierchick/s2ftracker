@@ -70,9 +70,5 @@ export function validateS2FProduct(object: S2FProduct): boolean {
     return false;
   }
 
-  if (typeof object.n === 'undefined') {
-    return false;
-  }
-
-  return true
+  return !(typeof object.n === 'undefined');
 }
