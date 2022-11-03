@@ -1,8 +1,10 @@
 import { ILogObject, Logger } from "tslog";
 import { appendFileSync } from "fs";
+import { join } from 'path';
+import { __root } from './path';
 
 function logToTransport(logObject: ILogObject) {
-  appendFileSync("logs.txt", JSON.stringify(logObject) + "\n");
+  appendFileSync(join(__root(), "logs.txt"), JSON.stringify(logObject) + "\n");
 }
 
 export const logger: Logger = new Logger();
