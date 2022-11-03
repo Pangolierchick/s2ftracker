@@ -9,6 +9,9 @@ import compression from 'compression';
 import fs from 'fs/promises'
 import { S2FPlayersRecord } from './types';
 
+import { __root } from './path';
+import { join } from 'path';
+
 const app = express()
 const port = 3000
 
@@ -19,7 +22,8 @@ app.set('view engine', 'ejs');
 async function main() {
   console.log("=========== CHECKER STARTED ===========");
 
-  const fetcher = new S2FFetcher(PLAYERS_DATA_JSON_FILENAME, AUCTION_DATA_JSON_FILENAME, { zipName: './data/backup.zip' });
+  const fetcher = new S2FFetcher(PLAYERS_DATA_JSON_FILENAME, AUCTION_DATA_JSON_FILENAME, { zipName: join(__root(), './data/backup.zip') });
+  console.log(__root());
   fetcher.attachLogger(logger);
   fetcher.attachBackuper(createBackup);
 
@@ -49,13 +53,13 @@ app.get('/render', (req, res) => {
 })
 
 app.get('/players', async (req, res) => {
-  const playersText = await fs.readFile('./data/players.json', {encoding: 'utf-8'})
+  const playersText = await fs.readFile(join(__root(), './data/players.json'), {encoding: 'utf-8'})
   const playersJson = JSON.parse(playersText) as S2FPlayersRecord[]
 
-  let labels: string[] = []
-  let data: number[] = []
+  const labels: string[] = []
+  const data: number[] = []
 
-  for (let player of playersJson) {
+  for (const player of playersJson) {
     labels.push(`"${new Date(player.t).toLocaleString('ru').replace(',', '')}"`)
     data.push(player.r.pn)
   }
