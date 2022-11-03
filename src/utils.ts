@@ -3,9 +3,7 @@ import { existsSync, write } from 'fs';
 import { S2FPlayers, S2FPlayersRecord, S2FProduct, S2FProductRecord } from './types';
 
 export async function safeReadJson<T>(path: string): Promise<T[]> {
-  const json = existsSync(path) ? JSON.parse(await readFile(path, { encoding: 'utf8' })) : [];
-
-  return json as T[];
+  return existsSync(path) ? JSON.parse(await readFile(path, { encoding: 'utf8' })) : [];
 }
 
 export async function safeReadJsonProduct(path: string): Promise<S2FProductRecord[]> {

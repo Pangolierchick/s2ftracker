@@ -19,12 +19,12 @@ const port = 3000
 app.use(compression())
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+app.set('views', join(__root(), 'views'));
 
 async function main() {
   console.log("=========== CHECKER STARTED ===========");
 
   const fetcher = new S2FFetcher(PLAYERS_DATA_JSON_FILENAME, AUCTION_DATA_JSON_FILENAME, { zipName: join(__root(), './data/backup.zip') });
-  console.log(__root());
   fetcher.attachLogger(logger);
   fetcher.attachBackuper(createBackup);
 
